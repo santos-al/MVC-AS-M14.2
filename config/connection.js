@@ -4,6 +4,7 @@ const path = require('path');
 // Add dotenv functionality to hide sensitive info
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
+// Connects to sequelize database
 const sequelize = new Sequelize(
     process.env.DB_NAME, 
     process.env.DB_USER, 
