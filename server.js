@@ -1,15 +1,12 @@
 const path = require('path');
 const express = require('express');
 const session = require('express-session');
-const exphbs = require('express-handlebars');
 const sequelize = require('./config/connection');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
 const app = express();
 const PORT = 3001;
 
-// Set up Handlebars.js engine with custom helpers
-const hbs = exphbs.create({ helpers });
 
 const sess = {
   secret: 'secret',
@@ -26,11 +23,7 @@ const sess = {
   })
 };
 
-app.use(session(sess));
-
-// Initiate handlebars
-app.engine('handlebars', hbs.engine);
-app.set('view engine', 'handlebars');
+app.use(session(sess))
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
