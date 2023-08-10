@@ -10,7 +10,7 @@ const userController = {
                 req.session.user_id = newUser.id;
                 req.session.logged_in = true;
           
-                res.json({ user: newUser, message: "Sign up complete" });
+                res.status(200).json({ user: newUser, message: "Sign up complete" });
               });
         } catch (err) {
             res.status(400).json(err);
@@ -44,7 +44,7 @@ const userController = {
         req.session.user_id = userData.id;
         req.session.logged_in = true;
   
-        res.json({ user: userData, message: "You are now logged in!" });
+        res.status(200).json({ user: userData, message: "You are now logged in!" });
       });
     } catch (err) {
       res.status(400).json(err);
@@ -55,12 +55,52 @@ const userController = {
     logout: async (req, res) => {
     if (req.session.logged_in) {
       req.session.destroy(() => {
-        res.status(204).end();
+        res.status(0).end();
       });
     } else {
       res.status(404).end();
     }
   },
+
+//   get all the users from the database and their posts
+    getAllUsers: async (req, res) => {
+        try {
+            const users = await User.findAll({
+                attributes: { exclude: ['password'] },
+                include: [
+                    {
+                        model: Post,
+                        attributes: ['id', 'title', 'content'],
+                    }
+                ],
+            });
+            res.status(200).json(users); 
+        } catch (err) {
+            res.status(500).json(err);
+        }
+    },
+
+// get a single user from the databse and the users posts
+    getUserById: async (req, res) => {
+        try {
+            const user = await User.findByPk(req.params.id, {
+                attributes: { exclude: ['password'] }, 
+                include: [
+                    {
+                        model: Post,
+                        attributes: ['id', 'title', 'content'],
+                    }
+                ],
+            });
+            if (!user) {
+                res.status(404).json({ message: 'No user found with this id!' });
+                return;
+            }
+            res.status(200).json(user); 
+        } catch (err) {
+            res.status(500).json(err);
+        }
+    },
 };
 
 module.exports = userController
