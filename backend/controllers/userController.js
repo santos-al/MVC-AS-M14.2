@@ -63,7 +63,7 @@ const userController = {
   },
 
 //   get all the users from the database and their posts
-    getAllUsers: async (req, res) => {
+    getUsers: async (req, res) => {
         try {
             const users = await User.findAll({
                 attributes: { exclude: ['password'] },
@@ -81,7 +81,7 @@ const userController = {
     },
 
 // get a single user from the databse and the users posts
-    getUserById: async (req, res) => {
+    getUser: async (req, res) => {
         try {
             const user = await User.findByPk(req.params.id, {
                 attributes: { exclude: ['password'] }, 
